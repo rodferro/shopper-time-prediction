@@ -2,27 +2,27 @@ import numpy as np
 import pandas as pd
 import pickle
 
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_percentage_error
 from time import time
 from xgboost import XGBRegressor
 
 
 def train(X_train, y_train):
     reg = XGBRegressor(
-        eval_metric="mae",
-        subsample=0.7,
-        n_estimators=1000,
-        max_depth=5,
+        eval_metric="mape",
+        subsample=0.6,
+        n_estimators=500,
+        max_depth=15,
         learning_rate=0.01,
         colsample_bytree=0.7999999999999999,
-        colsample_bylevel=0.8999999999999999,
+        colsample_bylevel=0.5,
     )
     reg.fit(X_train, y_train)
     return reg
 
 
 def score(reg, X_test, y_test):
-    return mean_absolute_error(y_test, reg.predict(X_test))
+    return mean_absolute_percentage_error(y_test, reg.predict(X_test))
 
 
 def save(reg):
@@ -46,4 +46,4 @@ if __name__ == "__main__":
 
     save(reg)
 
-    print("MAE:", score(reg, X_test, y_test))
+    print("MAPE:", score(reg, X_test, y_test))
