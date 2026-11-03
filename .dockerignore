@@ -1,7 +1,15 @@
 .git
 .gitignore
+.venv
+**/__pycache__
+.pytest_cache
 *.ipynb
+.ipynb_checkpoints
+tests
+model
+data/submission.csv
+data/predicted.csv
 README.md
-LICENSE
+requirements-dev.txt
 Dockerfile*
-docker-compose*
+.dockerignore

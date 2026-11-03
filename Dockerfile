@@ -1,30 +1,26 @@
-FROM ubuntu:18.04
-ENV PATH="/root/miniconda3/bin:${PATH}"
-ARG PATH="/root/miniconda3/bin:${PATH}"
+FROM python:3.12-slim
 
-RUN apt update \
-    && apt install -y htop python3-dev wget
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    && mkdir root/.conda \
-    && sh Miniconda3-latest-Linux-x86_64.sh -b \
-    && rm -f Miniconda3-latest-Linux-x86_64.sh
+# LightGBM needs the OpenMP runtime.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN conda create -y -n ml python=3.7
+WORKDIR /app
 
-COPY . src/
-RUN /bin/bash -c "cd src \
-    && source activate ml \
-    && pip install -r requirements.txt"
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Make RUN commands use the new environment:
-SHELL ["conda", "run", "-n", "ml", "/bin/bash", "-c"]
+COPY src/ src/
+COPY data/orders.csv data/order_products.csv data/shoppers.csv data/storebranch.csv data/sample.csv data/
 
-# Demonstrate the environment is activated:
-RUN echo "Make sure flask is installed:"
-RUN python -c "import flask"
+# Train during the build, so the image ships with the model and the repo holds only code and data.
+RUN python -m src.train
 
-# The code to run when container is started:
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "ml"]
-WORKDIR "src"
-WORKDIR "src"
+RUN useradd --create-home app
+USER app
+
+EXPOSE 5000
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "src.api:create_app()"]

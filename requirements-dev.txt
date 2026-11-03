@@ -1,0 +1,9 @@
+# Local development: notebook and tests on top of the runtime requirements.
+-r requirements.txt
+scipy==1.13.1
+matplotlib==3.9.4
+seaborn==0.13.2
+nbconvert==7.17.2
+nbformat==5.10.4
+ipykernel==6.31.0
+pytest==8.4.2
