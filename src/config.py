@@ -11,7 +11,7 @@ METRICS_PATH = MODEL_DIR / "metrics.json"
 RANDOM_STATE = 42
 LOCAL_TZ = "America/Santiago"  # all coordinates are in Chile; promised_time is in UTC
 
-# Final LightGBM parameters from the randomized search in case-ml.ipynb.
+# Final LightGBM parameters from the randomized search in shopper-time-prediction.ipynb.
 MODEL_PARAMS = dict(
     objective="l1",  # matches the MAE evaluation metric
     n_estimators=646,

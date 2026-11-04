@@ -5,7 +5,7 @@ already joined with the shopper and store data (see ``INPUT_COLUMNS``). ``load_o
 builds those rows from the raw CSVs, and ``build_features`` turns them into model features,
 so training and serving can't drift apart.
 
-The logic mirrors case-ml.ipynb, with one difference: the API rows don't carry the store
+The logic mirrors shopper-time-prediction.ipynb, with one difference: the API rows don't carry the store
 chain, so ``store_id`` isn't a feature here. With the notebook's parameters this costs
 about 0.2 min of CV MAE (16.3 vs 16.1), within fold-to-fold noise.
 """

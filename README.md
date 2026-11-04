@@ -1,8 +1,8 @@
-# Data Science Case Study
+# Shopper Time Prediction
 
 Predict how many minutes a shopper needs to complete an order (`total_minutes`). The case statement is [below](#the-case).
 
-- [`case-ml.ipynb`](case-ml.ipynb): the analysis. It covers data preparation, EDA, model selection with cross-validation, error analysis
+- [`shopper-time-prediction.ipynb`](shopper-time-prediction.ipynb): the analysis. It covers data preparation, EDA, model selection with cross-validation, error analysis
   and validation checks, and writes [`data/submission.csv`](data/submission.csv) (all 2,000 unlabeled orders).
 - [`src/`](src/): the same model packaged for production. It has a training script, a prediction API and a Docker image.
 
@@ -38,7 +38,7 @@ python3.12 -m venv .venv
 .venv/bin/python -m src.predict data/sample.csv data/predicted.csv   # same, without the server
 
 .venv/bin/pytest                       # tests
-.venv/bin/jupyter nbconvert --to notebook --execute --inplace case-ml.ipynb   # re-runs the notebook (≈10 min)
+.venv/bin/jupyter nbconvert --to notebook --execute --inplace shopper-time-prediction.ipynb   # re-runs the notebook (≈10 min)
 ```
 
 Run every command from the repository root.
@@ -48,8 +48,8 @@ Run every command from the repository root.
 The model is trained while the image builds, so the image is self-contained and the repository holds no model file.
 
 ```sh
-docker build -t case-ml .
-docker run --rm -p 5000:5000 case-ml   # gunicorn on port 5000
+docker build -t shopper-time-prediction .
+docker run --rm -p 5000:5000 shopper-time-prediction   # gunicorn on port 5000
 
 curl localhost:5000/health
 curl -F file=@data/sample.csv localhost:5000/predict
